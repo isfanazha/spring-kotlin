@@ -59,8 +59,22 @@ class BranchServiceImpl(@Autowired var branchRepository: BranchRepository) : Bra
     }
 
     override fun getAllByKeyword(searchParameters: SearchParameters): PageJsonBranchDto {
-        var pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
-        var branchPage = branchRepository.findAllByKeyword(searchParameters.keyword.toString(), pageRequest)
+        var pageRequest: Pageable
+
+        var branchPage = if (searchParameters.sortColumn == "" || searchParameters.sortMode == "") {
+            pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
+            branchRepository.findAllByKeyword(searchParameters.keyword.toString(), pageRequest)
+        } else {
+            pageRequest = if (searchParameters.sortMode == "desc") {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).descending())
+            } else {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).ascending())
+            }
+
+            branchRepository.findAllByKeyword(searchParameters.keyword.toString(), pageRequest)
+        }
 
         return branchPageToPageJsonBranchDto(branchPage)
     }

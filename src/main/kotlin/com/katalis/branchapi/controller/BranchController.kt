@@ -70,6 +70,15 @@ class BranchController(@Autowired val branchService: BranchService) {
         return branchService.getAllByKeyword(SearchParameters(page - 1, size, keyword))
     }
 
+
+    @GetMapping("/all/search/{keyword}/sort/{sortColumn}/{sortMode}/page/{page}/{size}")
+    fun getAllByKeywordWithSorting(
+            @PathVariable keyword: String, @PathVariable sortColumn: String,
+            @PathVariable sortMode: String, @PathVariable page: Int,
+            @PathVariable size: Int): PageJsonBranchDto {
+        return branchService.getAllByKeyword(SearchParameters(page - 1, size, keyword, sortColumn, sortMode))
+    }
+
     @PostMapping("/save")
     fun save(@RequestBody branchEditDto: BranchEditDto): BranchDto {
         return branchService.save(branchEditDto)
