@@ -11,6 +11,8 @@ import com.katalis.branchapi.utils.getTimeNow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,8 +24,22 @@ class BranchServiceImpl(@Autowired var branchRepository: BranchRepository) : Bra
     }
 
     override fun getAll(searchParameters: SearchParameters): PageJsonBranchDto {
-        var pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
-        var branchPage = branchRepository.findAll(pageRequest)
+        var pageRequest: Pageable
+
+        var branchPage = if (searchParameters.sortColumn == "" || searchParameters.sortMode == "") {
+            pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
+            branchRepository.findAll(pageRequest)
+        } else {
+            pageRequest = if (searchParameters.sortMode == "desc") {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).descending())
+            } else {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).ascending())
+            }
+
+            branchRepository.findAll(pageRequest)
+        }
 
         return branchPageToPageJsonBranchDto(branchPage)
     }

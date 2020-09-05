@@ -34,6 +34,14 @@ class BranchController(@Autowired val branchService: BranchService) {
         return branchService.getAll(SearchParameters(page - 1, size))
     }
 
+    @GetMapping("/all/sort/{sortColumn}/{sortMode}/page/{page}/{size}")
+    fun getAllWithSorting(
+            @PathVariable sortColumn: String, @PathVariable sortMode: String,
+            @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
+        // TODO: Add validation (sortmode, sort column, etc)
+        return branchService.getAll(SearchParameters(page - 1, size, "", sortColumn, sortMode))
+    }
+
     @GetMapping("/all/level/{level}/{page}/{size}")
     fun getAllByLevel(@PathVariable level: Int, @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
         return branchService.getAllByLevel(level, SearchParameters(page - 1, size))
