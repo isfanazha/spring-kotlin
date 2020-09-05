@@ -7,15 +7,19 @@ import com.katalis.branchapi.dto.ResultDto
 import com.katalis.branchapi.entity.SearchParameters
 
 interface BranchService {
-    // get
+    // get by id
     fun getByID(id: String): BranchDto
 
+    // get all
     fun getAll(searchParameters: SearchParameters): PageJsonBranchDto
+    fun getAllByKeyword(searchParameters: SearchParameters): PageJsonBranchDto
+
+    // get all by level
     fun getAllByLevel(level: Int, searchParameters: SearchParameters): PageJsonBranchDto
+    fun getAllByLevelAndKeyword(level: Int, searchParameters: SearchParameters): PageJsonBranchDto
+
+    // get all children
     fun getAllChildren(parentID: String, searchParameters: SearchParameters): PageJsonBranchDto
-
-    fun getAllByKeyword(keyword: String, searchParameters: SearchParameters): PageJsonBranchDto
-
 
     // save
     fun save(branchEditDto: BranchEditDto): BranchDto

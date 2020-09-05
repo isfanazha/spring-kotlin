@@ -39,6 +39,13 @@ class BranchController(@Autowired val branchService: BranchService) {
         return branchService.getAllByLevel(level, SearchParameters(page - 1, size))
     }
 
+    @GetMapping("/all/level/{level}/search/{keyword}/page/{page}/{size}")
+    fun getAllByLevelAndKeyword(
+            @PathVariable level: Int, @PathVariable keyword: String,
+            @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
+        return branchService.getAllByLevelAndKeyword(level, SearchParameters(page - 1, size, keyword))
+    }
+
     @GetMapping("/all/children/{parentID}/{page}/{size}")
     fun getAllChildrenByParent(@PathVariable parentID: String, @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
         return branchService.getAllChildren(parentID, SearchParameters(page - 1, size))
@@ -52,7 +59,7 @@ class BranchController(@Autowired val branchService: BranchService) {
 
     @GetMapping("/all/search/{keyword}/page/{page}/{size}")
     fun getAllByKeyword(@PathVariable keyword: String, @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
-        return branchService.getAllByKeyword(keyword, SearchParameters(page - 1, size))
+        return branchService.getAllByKeyword(SearchParameters(page - 1, size, keyword))
     }
 
     @PostMapping("/save")

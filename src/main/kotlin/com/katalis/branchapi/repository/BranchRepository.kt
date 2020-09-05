@@ -14,7 +14,10 @@ interface BranchRepository : JpaRepository<Branch, Long> {
     fun findAllByParentID(ParentID: String, pageable: Pageable): Page<Branch>
 
     // Just querying the name of the branch based on keyword
-    @Query("SELECT br from Branch as br where br.name like %:keyword%")
+    @Query("select br from Branch as br where br.name like %:keyword%")
     fun findAllByKeyword(@Param("keyword") keyword: String, pageable: Pageable): Page<Branch>
+
+    @Query("select br from Branch as br where br.level = :level and br.name like %:keyword%")
+    fun findAllByLevelAndKeyword(@Param("level") level: Int, @Param("keyword") keyword: String, pageable: Pageable): Page<Branch>
 
 }
