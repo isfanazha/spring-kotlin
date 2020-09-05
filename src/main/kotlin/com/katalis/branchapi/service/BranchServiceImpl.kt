@@ -42,6 +42,13 @@ class BranchServiceImpl(@Autowired var branchRepository: BranchRepository) : Bra
         return branchPageToPageJsonBranchDto(branchPage)
     }
 
+    override fun getAllByKeyword(keyword: String, searchParameters: SearchParameters): PageJsonBranchDto {
+        var pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
+        var branchPage = branchRepository.findAllByKeyword(keyword, pageRequest)
+
+        return branchPageToPageJsonBranchDto(branchPage)
+    }
+
     override fun save(branchEditDto: BranchEditDto): BranchDto {
         // set timezone to current time
         branchEditDto.timezone = getTimeNow()

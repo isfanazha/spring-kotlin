@@ -14,6 +14,9 @@ interface BranchService {
     fun getAllByLevel(level: Int, searchParameters: SearchParameters): PageJsonBranchDto
     fun getAllChildren(parentID: String, searchParameters: SearchParameters): PageJsonBranchDto
 
+    fun getAllByKeyword(keyword: String, searchParameters: SearchParameters): PageJsonBranchDto
+
+
     // save
     fun save(branchEditDto: BranchEditDto): BranchDto
     fun save(parentID: String, branchEditDto: BranchEditDto): BranchDto

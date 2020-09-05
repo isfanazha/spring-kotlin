@@ -44,6 +44,17 @@ class BranchController(@Autowired val branchService: BranchService) {
         return branchService.getAllChildren(parentID, SearchParameters(page - 1, size))
     }
 
+    @GetMapping("/attendance/{page}/{size}")
+    fun getAllBranchByAttendance(@PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
+        // TODO: Need to confirm about docs
+        return PageJsonBranchDto()
+    }
+
+    @GetMapping("/all/search/{keyword}/page/{page}/{size}")
+    fun getAllByKeyword(@PathVariable keyword: String, @PathVariable page: Int, @PathVariable size: Int): PageJsonBranchDto {
+        return branchService.getAllByKeyword(keyword, SearchParameters(page - 1, size))
+    }
+
     @PostMapping("/save")
     fun save(@RequestBody branchEditDto: BranchEditDto): BranchDto {
         return branchService.save(branchEditDto)
