@@ -45,8 +45,22 @@ class BranchServiceImpl(@Autowired var branchRepository: BranchRepository) : Bra
     }
 
     override fun getAllByLevel(level: Int, searchParameters: SearchParameters): PageJsonBranchDto {
-        var pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
-        var branchPage = branchRepository.findAllByLevel(level, pageRequest)
+        var pageRequest: Pageable
+
+        var branchPage = if (searchParameters.sortColumn == "" || searchParameters.sortMode == "") {
+            pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
+            branchRepository.findAllByLevel(level, pageRequest)
+        } else {
+            pageRequest = if (searchParameters.sortMode == "desc") {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).descending())
+            } else {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).ascending())
+            }
+
+            branchRepository.findAllByLevel(level, pageRequest)
+        }
 
         return branchPageToPageJsonBranchDto(branchPage)
     }
@@ -80,8 +94,22 @@ class BranchServiceImpl(@Autowired var branchRepository: BranchRepository) : Bra
     }
 
     override fun getAllByLevelAndKeyword(level: Int, searchParameters: SearchParameters): PageJsonBranchDto {
-        var pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
-        var branchPage = branchRepository.findAllByLevelAndKeyword(level, searchParameters.keyword.toString(), pageRequest)
+        var pageRequest: Pageable
+
+        var branchPage = if (searchParameters.sortColumn == "" || searchParameters.sortMode == "") {
+            pageRequest = PageRequest.of(searchParameters.page, searchParameters.size)
+            branchRepository.findAllByLevelAndKeyword(level, searchParameters.keyword.toString(), pageRequest)
+        } else {
+            pageRequest = if (searchParameters.sortMode == "desc") {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).descending())
+            } else {
+                PageRequest
+                        .of(searchParameters.page, searchParameters.size, Sort.by(searchParameters.sortColumn).ascending())
+            }
+
+            branchRepository.findAllByLevelAndKeyword(level, searchParameters.keyword.toString(), pageRequest)
+        }
 
         return branchPageToPageJsonBranchDto(branchPage)
     }
